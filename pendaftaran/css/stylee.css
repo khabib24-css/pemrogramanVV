@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #e3f2fd;
+  font-family: Arial, sans-serif;
+  /* height: 100vh; */
+  display: flex; /* agar bisa atur posisi */
+  justify-content: center;
+  padding: 2rem;
+  /* min-height: 100vh; */
+  align-items: center;
+}
+
+.form-wrapper {
+  border: 1px solid black;
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: #ffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  /* display: flex; */
+  /* align-items: center; */
+}
+
+.judul {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-transform: uppercase;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: 444;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #ffff;
+}
+
+.form-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}
