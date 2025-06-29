@@ -13,11 +13,15 @@ if(isset($_POST["login"]))
     if($password === $datauser["password"])
     {
 
-      $_SESSION['id_karyawan'] = $datauser['id_karyawan'];
-      $_SESSION['username'] = $datauser['username'];
-      $_SESSION['jabatan'] = $datauser['jabatan'];
-      $_SESSION['nama_lengkap'] = $datauser['nama_lengkap'];
-      $_SESSION['foto'] = $datauser['foto'];
+      $_SESSION['user'] = [
+    'id_karyawan' => $datauser['id_karyawan'],
+    'jabatan'     => $datauser['jabatan'],
+    ];
+      // $_SESSION['id_karyawan'] = $datauser['id_karyawan'];
+      // $_SESSION['username'] = $datauser['username'];
+      // $_SESSION['jabatan'] = $datauser['jabatan'];
+      // $_SESSION['nama_lengkap'] = $datauser['nama_lengkap'];
+      // $_SESSION['foto'] = $datauser['foto'];
 
       // variabel
       $tujuan_halaman = '';
@@ -30,7 +34,7 @@ if(isset($_POST["login"]))
         $pesan = 'Selamat Datang Di Halaman Admin';
       } else if ($datauser['jabatan'] === 'karyawan' || $datauser['jabatan'] === 'it')
       {
-        $tujuan_halaman = './karyawan/index.php';
+        $tujuan_halaman = './karyawan/karyawan.php';
         $pesan = 'Selamat Datang Di Halaman Karyawan';
       } 
 
