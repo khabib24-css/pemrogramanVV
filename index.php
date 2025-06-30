@@ -1,106 +1,26 @@
 <?php
-<<<<<<< HEAD
-=======
-session_start();
->>>>>>> efb146c1bca9c136b55f081c551ace6880edf042
 require './functions/functions.php';
 
 if(isset($_POST["login"]))
 {
-<<<<<<< HEAD
   $nama = $_POST["user"];
   $password = $_POST["password"];
   $resault = mysqli_query($db,"SELECT * FROM karyawan WHERE nama_depan = '$nama'");
-=======
-  $nama = $_POST["username"];
-  $password = $_POST["password"];
-  $resault = mysqli_query($db,"SELECT * FROM data_karyawan WHERE username = '$nama'");
->>>>>>> efb146c1bca9c136b55f081c551ace6880edf042
 
   if (mysqli_num_rows($resault) === 1) {
     $datauser = mysqli_fetch_assoc($resault);
     if($password === $datauser["password"])
     {
-<<<<<<< HEAD
       echo "<script>
       alert('Login berhasil');
       window.location.href = '../karyawan/index.php';
-=======
-
-      $_SESSION['user'] = [
-    'id_karyawan' => $datauser['id_karyawan'],
-    'jabatan'     => $datauser['jabatan'],
-    ];
-      // $_SESSION['id_karyawan'] = $datauser['id_karyawan'];
-      // $_SESSION['username'] = $datauser['username'];
-      // $_SESSION['jabatan'] = $datauser['jabatan'];
-      // $_SESSION['nama_lengkap'] = $datauser['nama_lengkap'];
-      // $_SESSION['foto'] = $datauser['foto'];
-
-      // variabel
-      $tujuan_halaman = '';
-      $pesan = '';
-      // akhir variable
-
-      if ($datauser['jabatan'] === 'manager')
-      {
-        $tujuan_halaman = './admin/index.php';
-        $pesan = 'Selamat Datang Di Halaman Admin';
-      } else if ($datauser['jabatan'] === 'karyawan' || $datauser['jabatan'] === 'it')
-      {
-        $tujuan_halaman = './karyawan/karyawan.php';
-        $pesan = 'Selamat Datang Di Halaman Karyawan';
-      } 
-
-
-      // echo "<script>
-      //     Swal.fire({
-      //     icon : 'success',
-      //     title : 'Login Berhasil',
-      //     text : '$pesan',
-      //     showConfirmButton : false,
-      //     timer : 1500
-      //     }).then(()=> {
-      //       window.location.href = '$tujuan_halaman';
-      //     });
-      //      </script>";
-      //      exit;
-      echo "<script>
-      alert('$pesan');
-      window.location.href = '$tujuan_halaman';
->>>>>>> efb146c1bca9c136b55f081c551ace6880edf042
       </script>";
       exit;
     }
   }
-<<<<<<< HEAD
   $error = true;
 }
 ?>
-=======
-  // echo "<script>
-  //         Swal.fire({
-  //         icon : 'error',
-  //         title : 'Gagal',
-  //         text : 'Periksa Username atau Password',
-  //         confirmButtonText : 'Coba Lagi'
-  //         });
-  //          </script>";
-  $error = true;
-}
-
-
-?>
-
-
-
-
-
-
-
-
-
->>>>>>> efb146c1bca9c136b55f081c551ace6880edf042
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -113,31 +33,15 @@ if(isset($_POST["login"]))
   <body>
     <form class="form" method="post">
       <h2 class="login">LOGIN</h2>
-<<<<<<< HEAD
-=======
-      <?php 
-  if (isset($_SESSION['error'])): ?>
-    <p style="color: red; font-weight:bold;"><?= $_SESSION['error'] ?></p>
-    <?php unset($_SESSION['error']); ?>
-<?php endif; ?>
-
->>>>>>> efb146c1bca9c136b55f081c551ace6880edf042
       <?php if (isset($error)):?>
         <p style="color:chocolate; font-style:italic">username / password salah</p>
         <?php endif; ?>
       <div class="kotak">
         <label for="" class="form-label">USERNAME</label>
-<<<<<<< HEAD
         <input type="text" name="user" class="form-control" id="" placeholder="gunakan nama depan ketika daftar"/>
         <label for="" class="form-label">Password</label>
         <input type="password" name="password" class="pass form-control" id="exampleInputPassword1" />
         <p>Belum punya akun ? <a href="./pendaftaran/pendaftaran.php">Daftar disini</a></p>
-=======
-        <input type="text" name="username" class="form-control" id="" placeholder="gunakan nama depan ketika daftar"/>
-        <label for="" class="form-label">Password</label>
-        <input type="password" name="password" class="pass form-control" id="exampleInputPassword1" />
-        <p>Belum punya akun ? <a href="./pendaftaran/pendaftaran2.php">Daftar disini</a></p>
->>>>>>> efb146c1bca9c136b55f081c551ace6880edf042
       </div>
       <div class="tombol">
         <button type="submit" class="button" name="login">Log in</button>
