@@ -12,6 +12,41 @@ function query($query) {
     return $kotak;
 }
 
+function cari($inputan)
+{
+    $cek = "SELECT * FROM data_karyawan
+    WHERE 
+    username LIKE '%$inputan%' 
+    OR
+    jabatan LIKE '%$inputan%'
+    ";
+
+    return query($cek);
+}
+function Hcari($inputan)
+{
+    $cek = "SELECT * FROM absen
+    WHERE 
+    tanggal LIKE '%$inputan%' 
+    OR
+    username LIKE '%$inputan%'
+    ";
+
+    return query($cek);
+}
+function Icari($inputan)
+{
+    $cek = "SELECT * FROM perizinan
+    WHERE 
+    nama_lengkap LIKE '%$inputan%' 
+    OR
+    tanggal_pengajuan LIKE '%$inputan%'
+    ";
+
+    return query($cek);
+}
+
+
 
 // ===> register ==== tambah <===//
 function register ($signup)
@@ -166,7 +201,7 @@ function Pizin($perizinan)
 
 function getToday()
 {
-    return date('2025-07-02');
+    return date('y-m-d');
 }
 
 function CekIzin($id_karyawan)
@@ -205,8 +240,11 @@ function updatestatus($id_izin, $status)
 function hadir ($db, $data)
 {
     $id_karyawan = $data['id_karyawan'];
+    $username = $data['username'];
+    $foto = $data['foto'];
     $tanggal = $data['tanggal'];
     $jam = $data['jam'];
+    
 
     $cek = mysqli_query($db, "SELECT * FROM absen WHERE id_karyawan = '$id_karyawan' AND tanggal = '$tanggal'");
 
@@ -220,8 +258,8 @@ function hadir ($db, $data)
 
 
     $query = mysqli_query($db, "
-    INSERT INTO absen (id_karyawan, tanggal, jam, keterangan)
-    VALUES ('$id_karyawan', '$tanggal', '$jam', 'hadir')");
+    INSERT INTO absen (id_karyawan, username, foto, tanggal, jam, keterangan)
+    VALUES ('$id_karyawan','$username', '$foto', '$tanggal', '$jam', 'hadir')");
 
     if ($query) 
     {
@@ -237,7 +275,109 @@ function hadir ($db, $data)
     }
 }
 
+function uploadubah()
+{
+    $namaFIle = $_FILES['Bfoto']['name'];
+    $ukuranFile = $_FILES['Bfoto']['size'];
+    $error = $_FILES['Bfoto']['error'];
+    $tmpName = $_FILES['Bfoto']['tmp_name'];
+
+    // if ($error === 4)
+    // {
+
+    // }
+    $typeGambarValid = ['jpg','jpeg','png'];
+    $typeGambar = explode('.', $namaFIle);
+    $typeGambar = strtolower(end($typeGambar));
+    if(!in_array($typeGambar,$typeGambarValid))
+    {
+        echo "<script> alert('yang anda upload bukan gambar ')</script>";
+		return false;
+    }
+
+    if ($ukuranFile > 1000000)
+    {
+        echo "<script> alert('ukuran terlalu BESAR')</script>";
+		return false;
+    }
+
+    $namaFIleBaru = uniqid();
+    $namaFIleBaru .= '.';
+    $namaFIleBaru .= $typeGambar;
+
+    move_uploaded_file($tmpName,'../karyawan/img/'. $namaFIleBaru);
+    return $namaFIleBaru;
+} 
+
+function ubah($data)
+{
+    global $db;
+
+    $id = $data["Bid_karyawan"];
+    $Unama_lengkap = htmlspecialchars($data["Bnama_lengkap"]);
+    $Uusername = htmlspecialchars($data["Busername"]);
+    $Ujabatan = htmlspecialchars($data["Bjabatan"]);
+    $Uemail = htmlspecialchars($data["Bemail"]);
+    $fotoLama = htmlspecialchars($data["fotoLama"]);
+    if( $_FILES['Bfoto']['error'] === 4 )
+    {
+        $foto = $fotoLama;
+    }else {
+        $foto = uploadubah();
+    }
+    $Upassword = htmlspecialchars($data["Bpassword"]);
+    $Ukonformasi = htmlspecialchars($data["Bkonfirmasi_password"]);
+    // cek password
+    if ($Upassword !== $Ukonformasi) {
+    echo "<script>alert('Password dan konfirmasi password tidak cocok!');</script>";
+    return 0;
+    }
+    $query = "UPDATE data_karyawan SET
+    nama_lengkap = '$Unama_lengkap',
+    username = '$Uusername',
+    jabatan = '$Ujabatan',
+    email = '$Uemail',
+    foto = '$foto',
+    password = '$Upassword',
+    konfirmasi_password = '$Ukonformasi'
+    WHERE id_karyawan = $id
+    ";
+    // akhir cek
+    mysqli_query($db,$query);
+    return mysqli_affected_rows($db);
+}
 
 
+function hapus($id){
+	global $db;
+	mysqli_query($db, "DELETE FROM data_karyawan WHERE id_karyawan = $id");
+	return mysqli_affected_rows($db);
+}
 
+
+function getTotalKarayawan()
+{
+    $total = query("SELECT COUNT(*) AS total FROM data_karyawan");
+    return $total[0]['total'] ?? 0;
+}
+function getTotalHadir()
+{
+    $hari = getToday();
+    $total = query("SELECT COUNT(*) AS hadir FROM absen WHERE tanggal = '$hari'
+    AND keterangan = 'hadir'");
+    return $total[0]['hadir'] ?? 0;
+}
+
+function getRiwayatHariIni()
+{
+    $hari = getToday();
+    $absen = query("SELECT username, jam, keterangan 
+                    FROM absen 
+                    WHERE tanggal = '$hari'");
+    $izin = query("SELECT nama_lengkap AS username, '-' AS jam, 'jenis_izin' AS keterangan 
+                   FROM perizinan 
+                   WHERE tanggal_mulai <= '$hari' 
+                     AND tanggal_berakhir >= '$hari'");
+                     return array_merge($absen,$izin);
+}
 ?>
