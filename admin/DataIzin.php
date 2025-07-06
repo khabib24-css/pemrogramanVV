@@ -3,8 +3,8 @@ session_start();
 require '../functions/functions.php';
 
 
-
-$tanggal = date('y-m-d');
+$halaman = 'DataIzin';
+$tanggal = getToday();
 $Sizin = query("SELECT * FROM perizinan WHERE status = 'Menunggu' AND DATE(tanggal_pengajuan) = '$tanggal'" );
 
 
@@ -33,38 +33,11 @@ $Sizin = query("SELECT * FROM perizinan WHERE status = 'Menunggu' AND DATE(tangg
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <nav class="navbar" style="background-color: #e3f2fd">
-      <div class="container-fluid">
-        <a class="navbar-brand ps-5">ADMIN</a>
-        <!-- <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form> -->
-        <h1 class="mx-auto mb-0" style="font-size: 1.5rem">PT. TADIKA MESRA</h1>
-        
-      </div>
-    </nav>
+    <?php include 'pilihan/navbar.php'; ?>
     <!-- sidebar -->
     <div class="d-flex">
-      <div class="bg-light p-3" style="width: 200px; height: 100vh">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="index.php">Beranda</a>
-          </li>
-          <li class="nav-item inactive">
-            <a class="nav-link" href="#">Data Karyawan</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" href="#" data-bs-toggle="dropdown" aria-expanded="false">Data Absensi
-              <!-- <i class="bi bi-caret-down-fill ms-2"></i> -->
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarAbsensi" role="button">
-              <li><a class="dropdown-item text-primary" href="#">Hadir</a></li>
-              <li><a class="dropdown-item nav-item text-primary border border-5 rounded-5 bg-info-subtle active" href="#">Izin</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <?php include 'pilihan/sidebar.php'; ?>
+      
       <!-- main -->
       <div class="p-4 flex-grow-1 bg-dark-subtle">
         <!-- table data karyawan -->
