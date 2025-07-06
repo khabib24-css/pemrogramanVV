@@ -5,11 +5,14 @@ session_start();
 //   header("location: ../index.php");
 // };
 require '../functions/functions.php';
-
+$halaman = 'data_karyawan';
 $sumber = query("SELECT * FROM data_karyawan");
 
 
-
+if ( isset($_POST["cari"]))
+{
+  $sumber = cari($_POST["input"]);
+}
 
 
 
@@ -37,38 +40,17 @@ $sumber = query("SELECT * FROM data_karyawan");
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <nav class="navbar" style="background-color: #e3f2fd">
+    <!-- <nav class="navbar" style="background-color: #e3f2fd">
       <div class="container-fluid">
         <a class="navbar-brand ps-5">ADMIN</a>
-        <!-- <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form> -->
         <h1 class="mx-auto mb-0" style="font-size: 1.5rem">PT. TADIKA MESRA</h1>
         
       </div>
-    </nav>
+    </nav> -->
+    <?php include 'pilihan/navbar.php'; ?>
     <!-- sidebar -->
     <div class="d-flex">
-      <div class="bg-light p-3" style="width: 200px; height: 100vh">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="index.php">Beranda</a>
-          </li>
-          <li class="nav-item border border-5 rounded-5 bg-info-subtle active">
-            <a class="nav-link" href="#">Data Karyawan</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex justify-content-between align-items-center" href="#" data-bs-toggle="dropdown" aria-expanded="false">Data Absensi
-              <!-- <i class="bi bi-caret-down-fill ms-2"></i> -->
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarAbsensi" role="button">
-              <li><a class="dropdown-item" href="#">Hadir</a></li>
-              <li><a class="dropdown-item" href="#">Izin</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <?php include 'pilihan/sidebar.php'; ?>
       <!-- main -->
       <div class="p-4 flex-grow-1 bg-dark-subtle">
         <!-- table data karyawan -->
@@ -76,9 +58,10 @@ $sumber = query("SELECT * FROM data_karyawan");
           <!-- baris "Data Karyawan" & searching" -->
           <div class="d-flex justify-content-between">
             <h2>Data Karyawan</h2>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button class="btn btn-primary" type="submit"><i class="bi bi-search-heart"></i></button>
+            <form class="d-flex" method="POST">
+              <!-- pencarian -->
+              <input class="form-control me-2" type="text" name="input" autofocus placeholder="Cari disini" aria-label="Search" autocomplete="off" />
+              <button class="btn btn-primary" type="submit" name="cari"><i class="bi bi-search-heart"></i></button>
             </form>
           </div>
           <!-- akhir "Data Karyawan" & searching"  -->
@@ -116,8 +99,10 @@ $sumber = query("SELECT * FROM data_karyawan");
                   <td><?=$data["password"] ?></td>
                   <td><?=$data["konfirmasi_password"] ?></td>
                   <td>
-                    <button class="btn btn-sm btn-warning">Edit</button>
-                    <button class="btn btn-sm btn-danger">delete</button>
+                    <!-- ubah -->
+                    <a href="ubah.php?id=<?= $data["id_karyawan"]; ?>" class="btn btn-sm btn-warning text-white" title="Edit" ><i class="bi bi-pencil-square"></i></a>
+                    <!-- delete -->
+                    <a href="delete.php?id=<?= $data["id_karyawan"]; ?>" class="btn btn-sm btn-danger text-white" title="Delete" ><i class="bi bi-trash3"></i></a>
                   </td>
                 </tr>
                 <?php $i++ ?>
