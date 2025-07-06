@@ -1,12 +1,23 @@
 
 <?php
 session_start();
+require '../functions/functions.php';
 // if ( !isset($_SESSION["login"]))
 // {
 //   header("location: ../index.php");
 // };
+$halaman = 'index';
+if (!isset($_SESSION['user']) || 
+($_SESSION['user']['jabatan'] !== 'manager')) {
+  $_SESSION['error']= "Silakan login terlebih dahulu!";
+  
+  header("Location: ../index.php");
+  exit;
+}
 
-
+$totalKaryawan = getTotalKarayawan();
+$totalHadir = getTotalHadir();
+$riwayatSekearang = getRiwayatHariIni();
 ?>
 
 
@@ -22,19 +33,20 @@ session_start();
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <nav class="navbar" style="background-color: #e3f2fd">
+    <!-- <nav class="navbar" style="background-color: #e3f2fd">
       <div class="container-fluid">
-        <a class="navbar-brand ps-5">ADMIN</a>
+        <a class="navbar-brand ps-5">ADMIN</a> -->
         <!-- <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form> -->
-        <h1 class="mx-auto mb-0" style="font-size: 1.5rem">PT. TADIKA MESRA</h1>
-        <a href="../logout.php" class="btn btn-outline-danger">Logout</a>
-      </div>
-    </nav>
+        <!-- <h1 class="mx-auto mb-0" style="font-size: 1.5rem">PT. TADIKA MESRA</h1>
+        <a href="../logout.php" class="btn btn-outline-danger">Logout</a> -->
+      <!-- </div>
+    </nav> -->
+    <?php include 'pilihan/navbar.php'; ?>
     <!-- sidebar -->
-    <div class="d-flex">
+    <!-- <div class="d-flex">
       <div class="bg-light p-3" style="width: 200px; height: 100vh">
         <ul class="nav flex-column">
           <li class="border border-5 nav-item rounded-5 bg-info-subtle">
@@ -48,46 +60,73 @@ session_start();
               <i class="bi bi-caret-down-fill ms-2"></i>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarAbsensi" role="button">
-              <li><a class="dropdown-item" href="#">Hadir</a></li>
+              <li><a class="dropdown-item" href="DataHadir.php">Hadir</a></li>
               <li><a class="dropdown-item" href="DataIzin.php">Izin</a></li>
             </ul>
           </li>
         </ul>
-      </div>
-      <!-- main -->
-      <div class="p-4 flex-grow-1 bg-dark-subtle">
-        <h2>Halaman Admin</h2>
-        <!-- data karyawan -->
-        <form class="formulir bg-body-tertiary mt-4 pb-3">
-          <div class="pt-2 row mb-3 ms-2">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">NIP</label>
-            <div class="col-sm-5">
-              <input class="form-control" type="text" placeholder="07680" aria-label="disable input example" disabled />
+      </div> -->
+          <main class="d-flex flex-grow-1">
+        <?php include 'pilihan/sidebar.php'; ?>
+
+        <div class="p-4 flex-grow-1 bg-dark-subtle">
+          <!-- main -->
+          <h2>Dashboard</h2>
+
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card bg-primary text-white p-3">
+                <h5>Total Karyawan</h5>
+                <h2><?= $totalKaryawan ?></h2>
+              </div>
             </div>
-          </div>
-          <div class="pt-2 row mb-3 ms-2">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">NAMA</label>
-            <div class="col-sm-5">
-              <input class="form-control" type="text" placeholder="Andhika" aria-label="disable input example" disabled />
+            <div class="col-md-3">
+              <div class="card bg-success text-white p-3">
+                <h5>Hari Ini Hadir</h5>
+                <h2><?= $totalHadir ?></h2>
+              </div>
             </div>
+            ...
           </div>
-          <div class="pt-2 row mb- ms-2">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">WAKTU</label>
-            <div class="col-sm-5">
-              <input class="form-control" type="text" placeholder="wednesday,07-05-2025 10:19:20pm " aria-label="disable input example" disabled />
-            </div>
-          </div>
-          <!-- tombol absen -->
-          <button type="button" class="btn btn-outline-success ms-3 mt-5">Absen</button>
-        </form>
-        <div class="container bg-body-tertiary mt-5 d-flex justify-content-center">
-          <button type="button" class="btn btn-warning">klik tombol ini jika tidak masuk/absen</button>
+
+          <hr>
+
+          <h4>Riwayat Hari Ini</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Jam</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (count($riwayatSekearang) > 0) : ?>
+                <?php $i = 1 ?>
+                <?php foreach ($riwayatSekearang as $isi) : ?>
+              <tr>
+                <td><?= $i ?></td>
+                <td><?= $isi['username'] ?></td>
+                <td><?= $isi['jam']?></td>
+                <td><?= $isi['keterangan'] ?></td>
+              </tr>
+              <?php $i++ ?>
+              <?php endforeach; ?>
+              <?php else : ?>
+                <tr>
+                  <td colspan="11" class="text-center">Tidak ada yang absen hari ini</td>
+                </tr>
+                <?php endif;?>
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
-    <footer class="bg-secondary text-center p-3 text-white">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati debitis qui, dolores facere necessitatibus incidunt quibusdam quos, accusamus soluta, illo ea consequatur velit ad. Modi, qui a? Vel, iure dicta.
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-  </body>
+      </main>
+
+      <footer class="bg-secondary text-center p-3 text-white">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati debitis qui, dolores facere necessitatibus incidunt quibusdam quos, accusamus soluta, illo ea consequatur velit ad. Modi, qui a? Vel, iure dicta.
+      </footer>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+    </body>
 </html>
